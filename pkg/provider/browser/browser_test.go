@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/playwright-community/playwright-go"
+	"github.com/mxschmitt/playwright-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/versent/saml2aws/v2/mocks"
@@ -227,6 +227,11 @@ func TestAutoFill(t *testing.T) {
 
 		loginDetails := &creds.LoginDetails{URL: ts.URL, Username: "golang", Password: "gopher"}
 		_ = autoFill(page, loginDetails)
+
+		err = page.Locator("div#result").WaitFor(playwright.LocatorWaitForOptions{
+			State: playwright.WaitForSelectorStateVisible,
+		})
+		require.Nil(t, err)
 
 		username, _ := page.Locator("input[name='username']").First().InputValue()
 		assert.Equal(t, "golang", username)
